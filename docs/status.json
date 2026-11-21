@@ -1,0 +1,110 @@
+{
+ "company": {
+  "name": "FORGIA · THE LIFTING ZONE",
+  "goal": "App affidabile, riconoscimento schede corretto, dati al sicuro"
+ },
+ "updated": "2026-11-21T17:16:30.235Z",
+ "budget": {
+  "maxRunsPerDay": 40,
+  "maxMinutesPerRun": 10,
+  "maxCostEurPerMonth": 0
+ },
+ "usage": {
+  "runsToday": 4,
+  "tokens": 0,
+  "costEur": 0
+ },
+ "agents": [
+  {
+   "id": "direttore",
+   "name": "Direttore",
+   "role": "Raccoglie i report e decide cosa segnalare",
+   "reportsTo": null,
+   "enabled": true,
+   "needsApproval": false,
+   "adapter": "summary",
+   "last": null
+  },
+  {
+   "id": "collaudatore",
+   "name": "Collaudatore",
+   "role": "Prova schede alimentari con il riconoscimento reale",
+   "reportsTo": "direttore",
+   "enabled": true,
+   "needsApproval": false,
+   "adapter": "script",
+   "last": {
+    "at": "2026-11-21T17:16:27.381Z",
+    "status": "ok",
+    "seconds": 2.5,
+    "problems": 1
+   }
+  },
+  {
+   "id": "revisore-alimenti",
+   "name": "Revisore alimenti",
+   "role": "Controlla kcal, macro e alias",
+   "reportsTo": "direttore",
+   "enabled": true,
+   "needsApproval": false,
+   "adapter": "script",
+   "last": {
+    "at": "2026-11-21T17:16:29.878Z",
+    "status": "ok",
+    "seconds": 0,
+    "problems": 0
+   }
+  },
+  {
+   "id": "sicurezza",
+   "name": "Sicurezza",
+   "role": "Chiavi nel codice, tabelle senza RLS, workflow rischiosi",
+   "reportsTo": "direttore",
+   "enabled": true,
+   "needsApproval": false,
+   "adapter": "script",
+   "last": {
+    "at": "2026-11-21T17:16:29.914Z",
+    "status": "ok",
+    "seconds": 0.3,
+    "problems": 0
+   }
+  },
+  {
+   "id": "rilascio",
+   "name": "Rilascio",
+   "role": "Versione, build, cache e note coerenti",
+   "reportsTo": "direttore",
+   "enabled": true,
+   "needsApproval": false,
+   "adapter": "script",
+   "last": {
+    "at": "2026-11-21T17:16:30.206Z",
+    "status": "ok",
+    "seconds": 0,
+    "problems": 0
+   }
+  },
+  {
+   "id": "sviluppatore",
+   "name": "Sviluppatore (AI)",
+   "role": "Corregge un difetto indicato. Disattivato: usa token",
+   "reportsTo": "direttore",
+   "enabled": false,
+   "needsApproval": true,
+   "adapter": "claude",
+   "last": {
+    "at": "2026-11-21T17:16:30.234Z",
+    "status": "disattivato",
+    "problems": 0
+   }
+  }
+ ],
+ "problems": [
+  {
+   "agent": "collaudatore",
+   "gravita": "media",
+   "testo": "completa.txt: alimento non riconosciuto \"30g di maltodestrine\""
+  }
+ ]
+}

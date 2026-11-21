@@ -1,0 +1,7 @@
+fetch('status.json?x=' + Date.now()).then(r => r.json()).then(s => {
+  const e = x => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const row = a => `<div class="ag ${a.reportsTo ? 'sub' : ''}"><b>${e(a.name)}</b> <span class="chip">${e(a.adapter)}</span> ${!a.enabled ? '<span class="chip w">disattivato</span>' : ''}${a.needsApproval ? '<span class="chip w">attende approvazione</span>' : ''}<div class="m">${e(a.role)}</div>${a.last ? `<div class="m">${e(a.last.status)} · ${a.last.problems} segnalazioni · ${a.last.seconds}s</div>` : ''}</div>`;
+  document.getElementById('o').innerHTML = `<div class="card"><b>${e(s.company.name)}</b><div class="m">${e(s.company.goal)}</div><div class="m">Aggiornato: ${e(s.updated)} · esecuzioni oggi ${s.usage.runsToday}/${s.budget.maxRunsPerDay} · token ${s.usage.tokens} · costo AI $ ${(s.usage.costUsd||0).toFixed(2)}</div></div>
+  <div class="card"><b>Organigramma</b>${s.agents.map(row).join('')}</div>
+  <div class="card"><b>Segnalazioni (${s.problems.length})</b>${s.problems.map(p => `<div class="m"><span class="${p.gravita === 'alta' ? 'r' : 'w'}">${e(p.gravita)}</span> · ${e(p.agent)} — ${e(p.testo)}</div>`).join('') || '<div class="m ok">Nessun problema.</div>'}</div>`;
+}).catch(() => { document.getElementById('o').textContent = 'Nessun dato ancora: esegui prima gli agenti.'; });
