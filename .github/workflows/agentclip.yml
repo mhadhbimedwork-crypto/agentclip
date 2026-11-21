@@ -1,0 +1,43 @@
+name: AgentClip
+on:
+  schedule:
+    - cron: '41 3 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  issues: write
+concurrency: { group: agentclip, cancel-in-progress: false }
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: { name: github-pages, url: '${{ steps.dep.outputs.page_url }}' }
+    steps:
+      - uses: actions/checkout@v4
+        with: { persist-credentials: false }
+      - uses: actions/checkout@v4          # il progetto da controllare (pubblico, nessun segreto)
+        with: { repository: mhadhbimedwork-crypto/forma, path: target, persist-credentials: false }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Browser per il collaudatore
+        working-directory: target
+        run: |
+          npm install --no-save --no-package-lock playwright@1.49.1
+          npx playwright install --with-deps chromium
+          node scripts/build-www.js _site
+      - name: Esegui agenti
+        id: ag
+        continue-on-error: true
+        run: node src/cli.js run
+      - name: Segnalazione se ci sono problemi gravi
+        if: steps.ag.outcome == 'failure'
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          node -e "const s=require('./docs/status.json');console.log(s.problems.map(p=>'- ['+p.gravita+'] '+p.agent+': '+p.testo).join('\n'))" > body.md
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "AgentClip: problemi gravi $(date +%F)" --body-file body.md
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: docs }
+      - id: dep
+        uses: actions/deploy-pages@v4
