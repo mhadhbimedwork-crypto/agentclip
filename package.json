@@ -1,0 +1,1 @@
+{ "name": "agentclip", "version": "0.1.0", "description": "Orchestrazione di agenti con organigramma, budget, approvazioni e dashboard. Senza dipendenze, senza token.", "license": "MIT", "bin": { "agentclip": "src/cli.js" }, "scripts": { "run": "node src/cli.js run", "status": "node src/cli.js status" } }

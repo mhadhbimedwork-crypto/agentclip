@@ -1,0 +1,81 @@
+{
+ "company": {
+  "name": "FORGIA · THE LIFTING ZONE",
+  "goal": "App affidabile, riconoscimento schede corretto, dati al sicuro"
+ },
+ "target": "./target",
+ "budget": {
+  "maxRunsPerDay": 40,
+  "maxMinutesPerRun": 10,
+  "maxCostEurPerMonth": 0
+ },
+ "agents": [
+  {
+   "id": "direttore",
+   "name": "Direttore",
+   "role": "Raccoglie i report e decide cosa segnalare",
+   "reportsTo": null,
+   "adapter": {
+    "type": "summary"
+   }
+  },
+  {
+   "id": "collaudatore",
+   "name": "Collaudatore",
+   "role": "Prova schede alimentari con il riconoscimento reale",
+   "reportsTo": "direttore",
+   "schedule": "daily",
+   "adapter": {
+    "type": "script",
+    "cmd": "node scripts/agenti/collaudatore.js"
+   }
+  },
+  {
+   "id": "revisore-alimenti",
+   "name": "Revisore alimenti",
+   "role": "Controlla kcal, macro e alias",
+   "reportsTo": "direttore",
+   "schedule": "daily",
+   "adapter": {
+    "type": "script",
+    "cmd": "node scripts/agenti/revisore-alimenti.js"
+   }
+  },
+  {
+   "id": "sicurezza",
+   "name": "Sicurezza",
+   "role": "Chiavi nel codice, tabelle senza RLS, workflow rischiosi",
+   "reportsTo": "direttore",
+   "schedule": "daily",
+   "adapter": {
+    "type": "script",
+    "cmd": "node scripts/agenti/sicurezza.js"
+   }
+  },
+  {
+   "id": "rilascio",
+   "name": "Rilascio",
+   "role": "Versione, build, cache e note coerenti",
+   "reportsTo": "direttore",
+   "schedule": "daily",
+   "adapter": {
+    "type": "script",
+    "cmd": "node scripts/agenti/rilascio.js"
+   }
+  },
+  {
+   "id": "sviluppatore",
+   "name": "Analista AI",
+   "role": "Legge il codice e propone correzioni (parere). Attivo solo con approvazione e tetto di spesa",
+   "reportsTo": "direttore",
+   "enabled": false,
+   "requiresApproval": true,
+   "adapter": {
+    "type": "claude",
+    "prompt": "Sei l'analista di FORGIA. Leggi dietplan.js e le schede di esempio in scripts/agenti/schede e proponi miglioramenti al riconoscimento delle schede alimentari.",
+    "maxTurns": 12,
+    "tools": "Read,Grep,Glob"
+   }
+  }
+ ]
+}
