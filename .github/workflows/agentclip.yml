@@ -13,7 +13,6 @@ jobs:
   run:
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    environment: { name: github-pages, url: '${{ steps.dep.outputs.page_url }}' }
     steps:
       - uses: actions/checkout@v4
         with: { persist-credentials: false }
@@ -39,5 +38,11 @@ jobs:
           gh issue create --repo "$GITHUB_REPOSITORY" --title "AgentClip: problemi gravi $(date +%F)" --body-file body.md
       - uses: actions/upload-pages-artifact@v3
         with: { path: docs }
+  deploy:
+    needs: run
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: { name: github-pages, url: '${{ steps.dep.outputs.page_url }}' }
+    steps:
       - id: dep
         uses: actions/deploy-pages@v4
